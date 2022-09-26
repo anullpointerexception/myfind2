@@ -2,10 +2,11 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: g++ Aktive Datei kompilieren",
-            "command": "/usr/bin/g++",
+            "label": "C/C++: clang++ Aktive Datei kompilieren",
+            "command": "/usr/bin/clang++",
             "args": [
-                "-fdiagnostics-color=always",
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
                 "-g",
                 "${file}",
                 "-o",
