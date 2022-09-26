@@ -22,6 +22,7 @@ int getDirectory(string dir, vector<string> &files, char* filename){
         string fname = dirEntry->d_name;
         if(fname.find(filename) != string::npos){
             files.push_back(fname);
+            // Was machen mir den files dann? Nur anzeigen oder auch nochmals den path anzeigen? 
         }
     }
     closedir(dp);
@@ -30,6 +31,10 @@ int getDirectory(string dir, vector<string> &files, char* filename){
 }
 
 int main(int argc, char** argv){
+
+    // usage ./main.cpp [absolute path] [filename] --> path must start at /home/.. for now, will be fixed later. 
+    // usage should also be  ./myfind [absolute path] [filename] .... in later revisions
+
 
 
     string dir = string("/home/ubuntu/dev/myfind2/test/");
