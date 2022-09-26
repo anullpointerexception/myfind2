@@ -22,7 +22,7 @@ int getDirectory(string dir, vector<string> &files, char* filename){
         string fname = dirEntry->d_name;
         if(fname.find(filename) != string::npos){
             files.push_back(fname);
-            // Was machen mir den files dann? Nur anzeigen oder auch nochmals den path anzeigen? 
+            cout << "File found!" << endl;
         }
     }
     closedir(dp);
@@ -45,9 +45,6 @@ int main(int argc, char** argv){
     string directory(argv[1]);
     
     getDirectory(directory, files, argv[2]);
-    for(unsigned int i = 0; i < files.size(); i++){
-        cout << files[i] << endl;
-    }
 
 
     return 0;
