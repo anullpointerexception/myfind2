@@ -20,7 +20,7 @@ int getDirectory(string dir, vector<string> &files, char* filename){
     }
     while((dirEntry = readdir(dp)) != NULL){
         string fname = dirEntry->d_name;
-        if(fname.find(filename) != string::npos){
+        if(fname.find(filename) != string::npos){ // npos is a static value that represents the highest possible number of type size_t
             files.push_back(fname);
             // cout << "File found!" << endl;
         }
