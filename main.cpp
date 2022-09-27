@@ -33,7 +33,29 @@ int getDirectory(string dir, vector<string> &files, char* filename){
 
 }
 
-int main(int argc, char** argv){
+int main(int argc, char* argv[]){
+
+    int opt;
+
+    int options;
+
+    while((opt = getopt(argc, argv, ":if:lrx")) != -1){
+        switch(opt){
+            case 'r':
+                cout << "switched to recursive mode" << endl;
+                options++;
+                break;
+            case 'i':
+                cout << "using case insensitive mode" << endl;
+                options++;
+                break;
+        }
+    }
+
+    cout << "Filename " << argv[options+2] << endl;
+
+
+    /*
 
     char currentLocation[256];
 
@@ -63,6 +85,6 @@ int main(int argc, char** argv){
         cout << files[i] << endl;
     }
 
-
+    */
     return 0;
 }
