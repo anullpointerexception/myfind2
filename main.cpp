@@ -6,9 +6,6 @@
 #include <vector>
 #include <unistd.h>
 
-
-
-
 using namespace std;
 
 int getDirectory(string dir, vector<string> &files, char* filename){
@@ -37,7 +34,7 @@ int main(int argc, char* argv[]){
 
     int opt;
 
-    int options;
+    int options = 0;
 
     while((opt = getopt(argc, argv, ":if:lrx")) != -1){
         switch(opt){
@@ -53,8 +50,6 @@ int main(int argc, char* argv[]){
     }
 
     cout << "Filename " << argv[options+2] << endl;
-
-
 
 
     char currentLocation[256];
