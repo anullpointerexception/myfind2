@@ -25,7 +25,7 @@ int getDirectory(string dir, vector<string> &files, char* filename){
         string fname = dirEntry->d_name;
         if(fname.find(filename) != string::npos){
             files.push_back(fname);
-            cout << "File found!" << endl;
+            // cout << "File found!" << endl;
         }
     }
     closedir(dp);
@@ -44,10 +44,10 @@ int main(int argc, char** argv){
 
 
 
-    string dir = string("/home/ubuntu/dev/myfind2/test/");
+    // string dir = string("/home/ubuntu/dev/myfind2/test/");
     vector<string> files = vector<string>();
 
-    cout << "Current Location: " << currentLocation << endl;
+    // cout << "Current Location: " << currentLocation << endl;
 
     string currentLocationString(currentLocation);
     string currentFileString(argv[1]);
@@ -58,6 +58,10 @@ int main(int argc, char** argv){
     string filename(argv[2]);
     
     getDirectory(finaldir, files, argv[2]);
+
+    for(int i = 0; i < files.size(); i++){
+        cout << files[i] << endl;
+    }
 
 
     return 0;
