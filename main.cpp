@@ -55,7 +55,7 @@ int main(int argc, char* argv[]){
     cout << "Filename " << argv[options+2] << endl;
 
 
-    /*
+
 
     char currentLocation[256];
 
@@ -72,19 +72,18 @@ int main(int argc, char* argv[]){
     // cout << "Current Location: " << currentLocation << endl;
 
     string currentLocationString(currentLocation);
-    string currentFileString(argv[1]);
+    string currentFileString(argv[options+1]);
 
 
     string finaldir = currentLocationString + currentFileString;
 
-    string filename(argv[2]);
+    string filename(argv[options+2]);
     
-    getDirectory(finaldir, files, argv[2]);
+    getDirectory(finaldir, files, argv[options+2] );
 
     for(int i = 0; i < files.size(); i++){
         cout << files[i] << endl;
     }
 
-    */
     return 0;
 }
