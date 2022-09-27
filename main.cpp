@@ -61,7 +61,6 @@ int main(int argc, char* argv[]){
 
     getcwd(currentLocation, 256);
 
-    // usage ./main.cpp [absolute path] [filename] --> path must start at /home/.. for now, will be fixed later. 
     // usage should also be  ./myfind [absolute path] [filename] .... in later revisions
 
 
