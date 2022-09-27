@@ -32,13 +32,18 @@ int getDirectory(string dir, vector<string> &files, char* filename){
 
 int main(int argc, char* argv[]){
 
+    if(argc<3){
+        cerr << "ERROR: missing parameters\nRequired parameters: searchpath, filename\nOptional parameters: additional filenames, \"-i\": insensitive search, \"-R\": search in subdirectories" << endl;
+        return -1;
+    }
+
     int opt;
 
     int options = 0;
 
-    while((opt = getopt(argc, argv, ":if:lrx")) != -1){
+    while((opt = getopt(argc, argv, ":iR")) != -1){
         switch(opt){
-            case 'r':
+            case 'R':
                 cout << "switched to recursive mode" << endl;
                 options++;
                 break;
