@@ -6,6 +6,7 @@
 #include <vector>
 #include <unistd.h>
 #include <thread>
+#include <sys/wait.h>
 
 using namespace std;
 
@@ -53,15 +54,12 @@ void listDirectoryRecursive(const string& location){
 }
 
 
-void testForThreads(string param){
-    //temp function
-    cout << "Thread searches: " << param << endl;
-}
-
 int main(int argc, char* argv[]){
 
     bool recursive = false;
-    bool caseinsensitive = false;
+    bool case_insensitive = false;
+    string search_path;
+    vector<string> files;
     
     if(argc<3){
         cerr << "ERROR: missing parameters\nRequired parameters: searchpath, filename\nOptional parameters: additional filenames, \"-i\": insensitive search, \"-R\": search in subdirectories" << endl;
@@ -70,70 +68,43 @@ int main(int argc, char* argv[]){
 
     int opt;
 
-    int options = 0;
     vector<thread> threadpool;
 
     while((opt = getopt(argc, argv, ":iR")) != -1){
         switch(opt){
             case 'R':
+                if(recursive == true){
+                    cerr << "ERROR: Invalid flag!" << endl;
+                    return -1;
+                }
                 cout << "switched to recursive mode" << endl;
-                options++;
                 recursive = true;
                 break;
             case 'i':
+                if(case_insensitive == true){
+                    cerr << "ERROR: Invalid flag!" << endl;
+                    return -1;
+                }
                 cout << "using case insensitive mode" << endl;
-                options++;
-                caseinsensitive = true;
+                case_insensitive = true;
                 break;
+            case '?':
+                cerr << "ERROR: Invalid flag!" << endl;
+                return -1;
         }
     }
 
-    cout << "Searchpath: " << argv[optind++] << endl;
+    search_path = argv[optind++];
 
-    if(recursive){
-        for(int i=0;i<argc-options-2;++i){
-            thread thread_obj(testForThreads, argv[optind++]); //search also in subdirectories recursively
-            threadpool.push_back(move(thread_obj));
-        }
-    }else{
-        for(int i=0;i<argc-options-2;++i){
-            thread thread_obj(testForThreads, argv[optind++]); //search only in given directory (function, params)
-            threadpool.push_back(move(thread_obj));
-        }
-    }
-    
-    
-    for(int i=0;i<threadpool.size(); ++i){
-        threadpool[i].join();
+    cout << "Searchpath:  " << search_path << endl;
+
+    for(;optind<argc;++optind){
+        files.push_back(argv[optind]);
     }
 
-    char currentLocation[256];
-
-    getcwd(currentLocation, 256);
-
-    // usage ./main.cpp [absolute path] [filename] --> path must start at /home/.. for now, will be fixed later. 
-    // usage should also be  ./myfind [absolute path] [filename] .... in later revisions
-
-    // string dir = string("/home/ubuntu/dev/myfind2/test/");
-    vector<string> files = vector<string>();
-
-    // cout << "Current Location: " << currentLocation << endl;
-
-    string currentLocationString(currentLocation);
-    string currentFileString(argv[options+1]);
-
-    string finaldir = currentLocationString + currentFileString;
-
-    string filename(argv[options+2]);
-    
-    // getDirectory(finaldir, files, argv[options+2]);
-
-    for(int i = 0; i < files.size(); i++){
-        // cout << files[i] << endl;
+    for(unsigned int i=0;i<files.size();++i){
+        cout << "File " << i+1 << ": " << files[i] << endl;
     }
-    // cout << "finaldir: " << finaldir << endl;
-    listDirectoryRecursive(finaldir);
-
 
     return 0;
 }
