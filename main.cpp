@@ -68,8 +68,7 @@ int main(int argc, char* argv[]){
 
     int opt;
 
-    vector<thread> threadpool;
-
+    //Flag handling
     while((opt = getopt(argc, argv, ":iR")) != -1){
         switch(opt){
             case 'R':
@@ -77,7 +76,7 @@ int main(int argc, char* argv[]){
                     cerr << "ERROR: Invalid flag!" << endl;
                     return -1;
                 }
-                cout << "switched to recursive mode" << endl;
+                //cout << "switched to recursive mode" << endl;
                 recursive = true;
                 break;
             case 'i':
@@ -85,7 +84,7 @@ int main(int argc, char* argv[]){
                     cerr << "ERROR: Invalid flag!" << endl;
                     return -1;
                 }
-                cout << "using case insensitive mode" << endl;
+                //cout << "using case insensitive mode" << endl;
                 case_insensitive = true;
                 break;
             case '?':
@@ -95,7 +94,7 @@ int main(int argc, char* argv[]){
     }
 
     search_path = argv[optind++];
-
+    //check if valid searchpath
     cout << "Searchpath:  " << search_path << endl;
 
     for(;optind<argc;++optind){
@@ -104,6 +103,7 @@ int main(int argc, char* argv[]){
 
     for(unsigned int i=0;i<files.size();++i){
         cout << "File " << i+1 << ": " << files[i] << endl;
+        //start child process with a file each
     }
 
     return 0;
