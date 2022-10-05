@@ -49,7 +49,6 @@ void listFiles(string path, string filename)
         for (auto const &dir_entry : fs::directory_iterator(path))
         {
             string name = fs::path(dir_entry).filename();
-            cout << name << endl;
             if (name == filename)
             {
                 cout << "File " << filename << " found @ location " << fs::path(dir_entry).relative_path() << endl;
@@ -67,11 +66,18 @@ void listFiles(string path, string filename)
     //return -2;
 }
 
+void test(string filename){
+    cout << getppid() << endl;
+    cout << getpid() << " File: " << filename << endl;
+}
+
 int main(int argc, char *argv[])
 {
 
     string search_path;
     vector<string> files;
+
+    pid_t parent_pid = getpid();
 
     if (argc < 3)
     {
@@ -125,11 +131,19 @@ int main(int argc, char *argv[])
     }
     cout << "pathVar " << pathVar << endl;
 
+    cout << "Parent PID: " << parent_pid << endl;
+
     for (unsigned int i = 0; i < files.size(); ++i)
     {
-        cout << "File " << i + 1 << ": " << files[i] << endl;
         //start child process with a file each
-        listFiles(pathVar, files[i]);
+        if(fork()==0){
+            listFiles(search_path, files[i]);
+            exit(0);
+        }    
+    }
+
+    for(unsigned int i=0;i<files.size();++i){
+        wait(nullptr);
     }
 
     return 0;
