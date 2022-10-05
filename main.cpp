@@ -118,11 +118,7 @@ int main(int argc, char *argv[])
         files.push_back(argv[optind]);
     }
     string pathVar = fs::current_path();
-    if (recursive == true)
-    {
-        string pathVar = fs::current_path();
-    }
-    else
+    if (recursive == false)
     {
         cout << "Search path: " << search_path << endl;
         pathVar = pathVar + search_path;
