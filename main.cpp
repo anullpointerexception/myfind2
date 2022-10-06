@@ -15,7 +15,6 @@ namespace fs = filesystem;
 
 bool recursive = false;
 bool case_insensitive = false;
-bool relative = false;
 
 int checkFileSystem(const fs::path &p, fs::file_status s = fs::file_status{})
 {
