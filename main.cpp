@@ -87,8 +87,6 @@ int main(int argc, char *argv[])
     string search_path;
     vector<string> files;
 
-    //pid_t parent_pid = getpid();
-
     if (argc < 3)
     {
         cerr << "ERROR: missing parameters\nRequired parameters: searchpath, filename\nOptional parameters: additional filenames, \"-i\": insensitive search, \"-R\": search in subdirectories" << endl;
@@ -131,7 +129,6 @@ int main(int argc, char *argv[])
     if (checkFileSystem(givenPath) == 1)
     {
         pathVar = givenPath;
-        cout << pathVar << "path is valid" << endl;
     }
     else
     {
