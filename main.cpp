@@ -15,6 +15,19 @@ namespace fs = filesystem;
 
 bool recursive = false;
 bool case_insensitive = false;
+bool relative = false;
+
+int checkFileSystem(const fs::path &p, fs::file_status s = fs::file_status{})
+{
+    if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
+    {
+        return 1; // exists
+    }
+    else
+    {
+        return 0; // does not exist
+    }
+}
 
 void listFiles(string path, string filename)
 {
@@ -23,49 +36,50 @@ void listFiles(string path, string filename)
         for (auto const &dir_entry : fs::recursive_directory_iterator(path))
         {
             string name = fs::path(dir_entry).filename();
-            // cout << "Filename: " << name << " Relative Path of File: " << fs::path(dir_entry).relative_path() << "\n";
-            // cout << "Filename dir: " << name << endl;
-            // cout << "Filename given " << filename << endl;
 
-            if(case_insensitive){
-                if(strcasecmp(name.c_str(), filename.c_str()) == 0){
-                    cout << "File " << filename << " found @ location " << fs::path(dir_entry).relative_path() << " using recursion " << endl;
+            if (case_insensitive)
+            {
+                if (strcasecmp(name.c_str(), filename.c_str()) == 0)
+                {
+                    cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
                 }
-            }else{
-                if(strcmp(name.c_str(), filename.c_str()) == 0){
-                    cout << "File " << filename << " found @ location " << fs::path(dir_entry).relative_path() << " using recursion " << endl;
+            }
+            else
+            {
+                if (strcmp(name.c_str(), filename.c_str()) == 0)
+                {
+                    cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
                 }
             }
         }
-        cout << "File " << filename << " not found" << endl;
+        cout << "<" << getpid() << "> : " << filename << " not found" << endl;
     }
     else
     {
         for (auto const &dir_entry : fs::directory_iterator(path))
         {
             string name = fs::path(dir_entry).filename();
-            if(case_insensitive){
-                if(strcasecmp(name.c_str(), filename.c_str())==0){
-                    cout << "File " << filename << " found @ location " << fs::path(dir_entry).relative_path() << endl;
+            if (case_insensitive)
+            {
+                if (strcasecmp(name.c_str(), filename.c_str()) == 0)
+                {
+                    cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
                 }
-            }else{
-                if(strcmp(name.c_str(), filename.c_str())==0){
-                    cout << "File " << filename << " found @ location " << fs::path(dir_entry).relative_path() << endl;
+            }
+            else
+            {
+                if (strcmp(name.c_str(), filename.c_str()) == 0)
+                {
+                    cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
                 }
             }
         }
         cout << "File " << filename << " not found" << endl;
     }
-    //return -2;
-}
-
-void test(string filename){
-    cout << getppid() << endl;
-    cout << getpid() << " File: " << filename << endl;
 }
 
 int main(int argc, char *argv[])
@@ -74,7 +88,7 @@ int main(int argc, char *argv[])
     string search_path;
     vector<string> files;
 
-    pid_t parent_pid = getpid();
+    //pid_t parent_pid = getpid();
 
     if (argc < 3)
     {
@@ -113,33 +127,37 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-
-    search_path = argv[optind++];
+    string pathVar;
+    const fs::path givenPath{argv[optind++]};
+    if (checkFileSystem(givenPath) == 1)
+    {
+        pathVar = givenPath;
+        cout << pathVar << "path is valid" << endl;
+    }
+    else
+    {
+        pathVar = fs::current_path();
+        string pathVar2 = givenPath;
+        pathVar = pathVar + pathVar2;
+    }
     //TODO: check if valid searchpath
     for (; optind < argc; ++optind)
     {
         files.push_back(argv[optind]);
     }
-    string pathVar = fs::current_path();
-    if (recursive == false)
-    {
-        cout << "Search path: " << search_path << endl;
-        pathVar = pathVar + search_path;
-    }
-    cout << "pathVar " << pathVar << endl;
-
-    cout << "Parent PID: " << parent_pid << endl;
 
     for (unsigned int i = 0; i < files.size(); ++i)
     {
         //start child process with a file each
-        if(fork()==0){
+        if (fork() == 0)
+        {
             listFiles(pathVar, files[i]);
             exit(0);
-        }    
+        }
     }
 
-    for(unsigned int i=0;i<files.size();++i){
+    for (unsigned int i = 0; i < files.size(); ++i)
+    {
         wait(nullptr);
     }
 
