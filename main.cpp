@@ -1,11 +1,7 @@
 #include <iostream>
 #include <dirent.h>
-#include <errno.h>
-#include <filesystem>
-#include <string>
 #include <vector>
 #include <unistd.h>
-#include <thread>
 #include <sys/wait.h>
 #include <filesystem>
 #include <string.h>
@@ -16,15 +12,15 @@ namespace fs = filesystem;
 bool recursive = false;
 bool case_insensitive = false;
 
-int checkFileSystem(const fs::path &p, fs::file_status s = fs::file_status{})
+bool isValidSystemPath(const fs::path &p, fs::file_status s = fs::file_status{})
 {
     if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
     {
-        return 1; // exists
+        return true; // exists
     }
     else
     {
-        return 0; // does not exist
+        return false; // does not exist
     }
 }
 
@@ -53,7 +49,6 @@ void listFiles(string path, string filename)
                 }
             }
         }
-        cout << "<" << getpid() << "> : " << filename << " not found" << endl;
     }
     else
     {
@@ -77,8 +72,8 @@ void listFiles(string path, string filename)
                 }
             }
         }
-        cout << "File " << filename << " not found" << endl;
     }
+    cout << "<" << getpid() << "> : " << filename << " not found" << endl;
 }
 
 int main(int argc, char *argv[])
@@ -87,6 +82,7 @@ int main(int argc, char *argv[])
     string search_path;
     vector<string> files;
 
+    //Check if enough parameters are available (atleast programname, searchpath, one filename)
     if (argc < 3)
     {
         cerr << "ERROR: missing parameters\nRequired parameters: searchpath, filename\nOptional parameters: additional filenames, \"-i\": insensitive search, \"-R\": search in subdirectories" << endl;
@@ -106,7 +102,6 @@ int main(int argc, char *argv[])
                 cerr << "ERROR: Invalid flag!" << endl;
                 return -1;
             }
-            cout << "switched to recursive mode" << endl;
             recursive = true;
 
             break;
@@ -116,7 +111,6 @@ int main(int argc, char *argv[])
                 cerr << "ERROR: Invalid flag!" << endl;
                 return -1;
             }
-            //cout << "using case insensitive mode" << endl;
             case_insensitive = true;
             break;
         case '?':
@@ -126,17 +120,18 @@ int main(int argc, char *argv[])
     }
     string pathVar;
     const fs::path givenPath{argv[optind++]};
-    if (checkFileSystem(givenPath) == 1)
-    {
+
+    if(givenPath.fs::path::is_relative()){
+        pathVar = fs::absolute(givenPath);
+    }else{
         pathVar = givenPath;
     }
-    else
-    {
-        pathVar = fs::current_path();
-        string pathVar2 = givenPath;
-        pathVar = pathVar + pathVar2;
+
+    if(!isValidSystemPath(pathVar)){
+        cerr << "ERROR: Path is not valid!" << endl;
+        return -1;
     }
-    //TODO: check if valid searchpath
+
     for (; optind < argc; ++optind)
     {
         files.push_back(argv[optind]);
