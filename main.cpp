@@ -12,7 +12,7 @@ namespace fs = filesystem;
 bool recursive = false;
 bool case_insensitive = false;
 
-bool isValidSystemPath(const fs::path &p, fs::file_status s = fs::file_status{})
+bool isValidSystemPath(const fs::path &p, fs::file_status s = fs::file_status{}) // checks whether given path exists on filesystem
 {
     if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
     {
@@ -24,17 +24,17 @@ bool isValidSystemPath(const fs::path &p, fs::file_status s = fs::file_status{})
     }
 }
 
-void listFiles(string path, string filename)
+void listFiles(string path, string filename) // searches files in given path, usage listFiles(path, filename)
 {
     if (recursive)
     {
-        for (auto const &dir_entry : fs::recursive_directory_iterator(path))
+        for (auto const &dir_entry : fs::recursive_directory_iterator(path)) // recursive approach to search files
         {
             string name = fs::path(dir_entry).filename();
 
-            if (case_insensitive)
+            if (case_insensitive) // case sensitivity check
             {
-                if (strcasecmp(name.c_str(), filename.c_str()) == 0)
+                if (strcasecmp(name.c_str(), filename.c_str()) == 0) // compare filename with files in given path
                 {
                     cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
@@ -42,7 +42,7 @@ void listFiles(string path, string filename)
             }
             else
             {
-                if (strcmp(name.c_str(), filename.c_str()) == 0)
+                if (strcmp(name.c_str(), filename.c_str()) == 0) // compare filename with files in given path
                 {
                     cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
@@ -52,12 +52,12 @@ void listFiles(string path, string filename)
     }
     else
     {
-        for (auto const &dir_entry : fs::directory_iterator(path))
+        for (auto const &dir_entry : fs::directory_iterator(path)) // iterative approach to search files
         {
-            string name = fs::path(dir_entry).filename();
+            string name = fs::path(dir_entry).filename(); // case sensitivity check
             if (case_insensitive)
             {
-                if (strcasecmp(name.c_str(), filename.c_str()) == 0)
+                if (strcasecmp(name.c_str(), filename.c_str()) == 0) // compare filename with files in given path
                 {
                     cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
@@ -65,7 +65,7 @@ void listFiles(string path, string filename)
             }
             else
             {
-                if (strcmp(name.c_str(), filename.c_str()) == 0)
+                if (strcmp(name.c_str(), filename.c_str()) == 0) // compare filename with files in given path
                 {
                     cout << "<" << getpid() << "> : " << filename << " : " << fs::path(dir_entry).relative_path() << endl;
                     return;
@@ -119,15 +119,19 @@ int main(int argc, char *argv[])
         }
     }
     string pathVar;
-    const fs::path givenPath{argv[optind++]};
+    const fs::path givenPath{argv[optind++]}; // creating new path via with given argument as location
 
-    if(givenPath.fs::path::is_relative()){
+    if (givenPath.fs::path::is_relative()) // check whether given path is relative in filesystem
+    {
         pathVar = fs::absolute(givenPath);
-    }else{
+    }
+    else
+    {
         pathVar = givenPath;
     }
 
-    if(!isValidSystemPath(pathVar)){
+    if (!isValidSystemPath(pathVar)) // checking for path in given filesystem
+    {
         cerr << "ERROR: Path is not valid!" << endl;
         return -1;
     }

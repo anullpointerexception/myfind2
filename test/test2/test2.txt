@@ -1,0 +1,7 @@
+cd ~/dev/verts/myfind2
+
+./myfind ./test test.txt
+./myfind ./test test.txt -R
+./myfind ./test test.txt test2.txt -R
+./myfind ./test teSt.txt teSt2.txt -R -i
+./myfind /usr/bin test.txt
